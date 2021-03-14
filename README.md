@@ -3,7 +3,7 @@ Most everything expects a logger named `logger`.
 
 ### \_\_init.py\_\_ 
 ```get_abs_path``` -> Get the absolute path to the module
-
+___
 ### Utils 
 ```setup_logging``` -> Logger setup
 
@@ -29,20 +29,21 @@ Most everything expects a logger named `logger`.
 
 ```merge_dicts``` -> Merges `dict_b` into `dict_a`.
 
+---
 ### DateTimeFormatter
 One place to format timestamps for human consumption.
-
+___
 ### DoHttp
 My generic Requests wrapper.
-
+___
 ### INIConfiguration
 My generic ConfigParser wrapper that converts ConfigParser <--> dict.
-
+___
 ### PathDetails
 One place to manage paths.
-
+___
 ### ServiceCreator
 Service creators/managers for SystemD, macOS, Windows.
-
+___
 ### SubProcessor
 My generic Subprocess wrapper.
