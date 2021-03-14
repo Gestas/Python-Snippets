@@ -1,4 +1,4 @@
-## A semi-random collection of Python bits and pieces
+## My semi-random collection of Python bits and pieces
 Most everything expects a logger named `logger`.
 
 ### \_\_init.py\_\_ 
@@ -47,3 +47,6 @@ Service creators/managers for SystemD, macOS, Windows.
 ___
 ### SubProcessor
 My generic Subprocess wrapper.
+___
+### SecretsKeyring
+My generic Keyring wrapper.
