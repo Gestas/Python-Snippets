@@ -155,3 +155,17 @@ class Utils:
         # signal.signal(signal.SIGINT, utils.signal_handler)
         _ = frame
         self.exiter(1, message=f"Caught Signal: {sig}", **kwargs)
+
+    @staticmethod
+    def get_platform() -> str:
+        """Returns the OS we're running on
+
+        :return: the platform
+        :rtype: str
+        """
+        import platform
+        p = platform.uname()
+        try:
+            return p[0]
+        except IndexError:
+            logger.error("Unable to determine platform.")
