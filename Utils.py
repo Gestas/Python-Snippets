@@ -169,3 +169,66 @@ class Utils:
             return p[0]
         except IndexError:
             logger.error("Unable to determine platform.")
+
+    @staticmethod
+    def aggregate_list_dupes(lst: list) -> dict:
+        """ Return a dict with frequency count of elements in a given list """
+        d = {}
+        try:
+            for i in lst:
+                if i in d:
+                    d[i] += 1
+                else:
+                    d[i] = 1
+        # Catch empty lists
+        except TypeError:
+            return d
+        return d
+
+    @staticmethod
+    def check_root() -> bool:
+        """ Checks for root/Administrator permissions. """
+        import ctypes
+        # Thanks to https://raccoon.ninja/en/dev/using-python-to-check-if-the-application-is-running-as-an-administrator/
+        try:
+            if os.getuid() == 0:
+                return True
+        except AttributeError:
+            if ctypes.windll.shell32.IsUserAnAdmin() != 0:
+                return True
+        return False
+
+    def enumerate_sub_dirs(self, root_dir):
+        """ Returns a list of all directories below root_dir """
+        # Thanks to @user136036 https://stackoverflow.com/a/40347279/219028
+        sub_folders = [f.path for f in os.scandir(root_dir) if f.is_dir()]
+        for dir_name in list(sub_folders):
+            sub_folders.extend(self.enumerate_sub_dirs(dir_name))
+        return sub_folders
+
+    @staticmethod
+    def diff_lists(list_a: list, list_b: list) -> list:
+        """ Returns a list of items in list_a that are not in list_b """
+        _list_a = list_a
+        _list_b = list_b
+        return [x for x in _list_a if x not in _list_b]
+
+    @staticmethod
+    def y_n(answer) -> bool:
+        """ Process the result of a Yes/No prompt. Returns True for Yes. """
+        _answer = answer.lower()
+        return bool(_answer.startswith("y"))
+
+    def merge_dicts(self, dict_a, dict_b, path=None):
+        """ Merges dict_b into dict_a"""
+        if path is None:
+            path = []
+        for key in dict_b:
+            if key in dict_a:
+                if isinstance(dict_a[key], dict) and isinstance(dict_b[key], dict):
+                    self.merge_dicts(dict_a[key], dict_b[key], path + [str(key)])
+                elif dict_a[key] != dict_b[key]:
+                    dict_a[key] = dict_b[key]
+            else:
+                dict_a[key] = dict_b[key]
+        return dict_a

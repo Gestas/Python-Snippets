@@ -72,6 +72,15 @@ class DoHTTP:
         _requests_session.mount(
             "https://", TimeoutHTTPAdapter(max_retries=self._retries)
         )
+        logging.debug(f"HTTP REQUEST URL: {_url}")
+        logging.debug(f"HTTP REQUEST METHOD: {_method}")
+        logging.debug(f"HTTP REQUEST DATA: {_data}")
+        logging.debug(f"HTTP REQUEST PARAMS: {_params}")
+        logging.debug(f"HTTP REQUEST BASIC AUTH: {_basic_auth}")
+        logging.debug(f"HTTP REQUEST HEADERS: {_headers}")
+        logging.debug(f"HTTP REQUEST PROXY: {_proxy}")
+        logging.debug(f"VERIFYING SERVER CERTIFICATE: {str(_verify)}")
+
         _request = Request(
             method=_method,
             url=_url,
@@ -89,19 +98,27 @@ class DoHTTP:
                 verify=_verify,
                 allow_redirects=_allow_redirects,
             )
+            logging.debug(f"HTTP RESPONSE CODE: {_response.status_code}")
+            logging.debug(f"HTTP RESPONSE HEADERS: {_response.headers}")
+            logging.debug(f"HTTP RESPONSE CONTENT: {_response.content}")
             if _raise:
                 _response.raise_for_status()
             return _response
         except requests.exceptions.HTTPError as err:
             logger.error(f"Error: {err}")
+            raise err
         except requests.exceptions.SSLError as err:
-            logger.error(f"Error: {err}")
+            logger.warning(f"HTTP TLS ERROR: {str(err)}")
+            raise err
         except requests.exceptions.Timeout as err:
-            logger.error(f"Error: {err}")
+            logger.warning(f"HTTP Timeout ERROR: {str(err)}")
+            raise err
         except requests.exceptions.ConnectionError as err:
-            logger.error(f"Error: {err}")
+            logger.warning(f"HTTP Connection ERROR: {str(err)}")
+            raise err
         except Exception as err:
-            logger.error(f"Error: {err}")
+            logger.warning(f"HTTP WARNING: {str(err)}")
+            raise err
 
 
 class TimeoutHTTPAdapter(HTTPAdapter):
